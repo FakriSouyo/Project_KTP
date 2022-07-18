@@ -55,9 +55,26 @@ public class DataController {
     }
     
     
-      @RequestMapping("/detail")
-    public String getDetail() {
-        return "detail";
+        @RequestMapping("/detail/{id}")
+        public String detail(@PathVariable int id, Model model){
+        
+        Data data = new Data();
+        
+        try{
+            data = datactrl.findData(id);
+        }catch(Exception e){
+            
+        }
+        
+        String foto = "";
+        if(data != null){
+            foto = Base64.encodeBase64String(data.getFoto());
+            model.addAttribute("foto", foto);
+        }
+        
+        model.addAttribute("data", data);
+        
+        return "/detail";
     }
 
     @RequestMapping("/main")
@@ -129,9 +146,9 @@ public class DataController {
     
        @RequestMapping("/edit/{id}")
        //@ResponseBody
-       public String update(@PathVariable(value = "id") int id, Model m) throws NonexistentEntityException,  AppEnterprise.project.ktp.exceptions.NonexistentEntityException {
+       public String update(@PathVariable(value = "id") int id, Model model) throws NonexistentEntityException,  AppEnterprise.project.ktp.exceptions.NonexistentEntityException {
        Data d = datactrl.findData(id);
-       m.addAttribute("data", d);
+       model.addAttribute("data", d);
        return "/editdata";
 }
 
